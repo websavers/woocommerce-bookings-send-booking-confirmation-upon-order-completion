@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:       WooCommerce Bookings Send Booking Confirmation Email
- * Description:       Ensures the Bookign Confirmation email is sent out when admin approval isn't required
+ * Description:       Ensures the Booking Confirmation email is sent out upon order completion, when admin approval isn't required
  * Version:           1.0
  * Requires at least: 5.2
  * Requires PHP:      8.1
