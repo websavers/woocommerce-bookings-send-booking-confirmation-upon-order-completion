@@ -31,21 +31,14 @@ add_action( 'admin_init', function(){
 
 add_action( 'woocommerce_order_status_completed', function( $order_id ){
 
-    //$order = wc_get_order( $order_id );
-
     if ( is_callable( 'WC_Booking_Data_Store::get_booking_ids_from_order_id') ) {
-		//$booking_data = new WC_Booking_Data_Store();
-		//$booking_ids = $booking_data->get_booking_ids_from_order_id( $order->get_id() );
         $booking_ids = WC_Booking_Data_Store::get_booking_ids_from_order_id( $order_id );
-
         foreach ( $booking_ids as $booking_id ) {
             $booking = new WC_Booking( $booking_id );
             $product_id = $booking->get_product_id();
-            $product = wc_get_product($product_id);
-            $requires_admin_approval = $product->get_meta( '_wc_booking_requires_confirmation', true );
-            if ( $requires_admin_approval === false ) continue; //key not found, probably not a booking
-            if ( empty($requires_admin_approval) || $requires_admin_approval == 0 ){
-                WC()->mailer()->emails['WC_Email_Booking_Confirmed']->trigger( $booking_id );
+            if ( !wc_booking_requires_confirmation( $product_id ) ) {
+                //WC()->mailer()->emails['WC_Email_Booking_Confirmed']->trigger( $booking_id );
+                $booking->update_status('confirmed'); //setting status to confirmed sends the confirmation email
             }
         }
 	}
